@@ -1,0 +1,6 @@
+{
+  "name": "Pup Alert",
+  "short_name": "Pup Alert",
+  "start_url": "/",
+  "display": "standalone"
+}

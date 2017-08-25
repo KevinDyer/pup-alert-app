@@ -1,0 +1,34 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="./pup-alert-sign-in.html">
+
+<dom-module id="pup-alert-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]!</h2>
+    <pup-alert-sign-in></pup-alert-sign-in>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class PupAlertApp extends Polymer.Element {
+      static get is() { return 'pup-alert-app'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'pup-alert-app'
+          }
+        };
+      }
+    }
+
+    window.customElements.define(PupAlertApp.is, PupAlertApp);
+  </script>
+</dom-module>
