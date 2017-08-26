@@ -1,4 +1,6 @@
 const functions = require('firebase-functions');
+const admin = require('firebase-admin');
+admin.initializeApp(functions.config().firebase);
 
 exports.checkTemperature = functions.database.ref('/temperature/{deviceId}')
   .onWrite((event) => {
