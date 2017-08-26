@@ -6,7 +6,9 @@
     "paper-button": "^2.0.0",
     "app-layout": "^2.0.1",
     "polymerfire": "^2.1.0",
-    "firebaseui": "^2.3.0"
+    "firebaseui": "^2.3.0",
+    "paper-styles": "^2.0.0",
+    "iron-flex-layout": "^2.0.0"
   },
   "devDependencies": {}
 }

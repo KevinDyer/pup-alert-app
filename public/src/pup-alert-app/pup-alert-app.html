@@ -17,8 +17,8 @@
         color: var(--primary-text-color);
       }
 
-      .hidden {
-         display: none;
+      .line {
+        height: 30px;
       }
     </style>
 
@@ -32,6 +32,7 @@
     <firebase-auth id="auth" user="{{user}}" signed-in="{{signedIn}}" status-known="{{statusKnown}}" on-error="handleError"></firebase-auth>
     <firebase-messaging id="messaging" token="{{token}}"></firebase-messaging>
     <firebase-document path="/users/[[user.uid]]/token" data="[[token]]"></firebase-document>
+    <firebase-document path="/temperature/Rn9yIaOY8taM04UeAd4IYcDZ75t2" data="{{temperature}}"></firebase-document>
 
     <app-header-layout>
       <app-header>
@@ -41,8 +42,12 @@
       </app-header>
 
       <pup-alert-login id="login"></pup-alert-login>
-      <div id="app">
-        <paper-button on-tap="signOut">Sign Out</paper-button>
+      <div id="app" class="content">
+        <div class="line">
+          <div class="label">Temperature</div>
+          <div class="value">[[_toFixed(temperature, 1)]]C</div>
+        </div>
+        <paper-button on-tap="signOut" raised>Sign Out</paper-button>
       </div>
     </app-header-layout>
 
@@ -65,6 +70,9 @@
           },
           user: {
             type: Object
+          },
+          temperature: {
+            type: Number
           }
         };
       }
@@ -93,6 +101,10 @@
 
       signOut() {
         this.$.auth.signOut();
+      }
+
+      _toFixed(value, digits) {
+        return Number(value).toFixed(digits);
       }
     }
 
