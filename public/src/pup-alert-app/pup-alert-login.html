@@ -2,18 +2,28 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/polymerfire/polymerfire.html">
 <script src="../../bower_components/firebaseui/dist/firebaseui.js"></script>
+<link rel="import" href="../app-theme.html">
 
 <dom-module id="pup-alert-login">
   <link rel="import" type="css" href="../../bower_components/firebaseui/dist/firebaseui.css" />
   <template>
-    <style>
+    <style include="app-theme">
       :host {
         display: block;
+      }
+
+      .content {
+        margin: 48px auto 48px auto;
+        padding: 0px 16px 0px 16px;
+        width: 100%;
+        max-width: 1024px;
       }
     </style>
 
     <firebase-auth app="{{app}}"></firebase-auth>
-    <div id="firebaseui-auth-container"></div>
+    <div class="content">
+      <div id="firebaseui-auth-container"></div>
+    </div>
       
   </template>
   <script>
