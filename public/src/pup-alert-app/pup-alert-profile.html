@@ -1,0 +1,67 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../app-theme.html">
+
+<dom-module id="pup-alert-profile">
+  <template>
+    <style include="app-theme">
+      :host {
+        display: block;
+      }
+
+      .button-container {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+      }
+
+      iron-image {
+        border-radius: 50%;
+      }
+    </style>
+
+    <firebase-auth id="auth" user="{{user}}" signed-in="{{signedIn}}"></firebase-auth>
+    
+    <paper-menu-button close-on-activate horizontal-align="right" no-overlap>
+      <div class="button-container" slot="dropdown-trigger">
+        <iron-image src="[[user.photoURL]]" height="40" width="40" preload fade sizing="cover"></iron-image>
+      </div>
+      <paper-listbox slot="dropdown-content">
+        <paper-item on-tap="signOut" disabled="[[!signedIn]]">Sign Out</paper-item>
+      </paper-listbox>
+    </paper-menu-button>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class PupAlertProfile extends Polymer.Element {
+      static get is() { return 'pup-alert-profile'; }
+      
+      static get properties() {
+        return {
+          user: {
+            type: Object
+          },
+          signedIn: {
+            type: Boolean
+          }
+        };
+      }
+
+      signOut() {
+        this.$.auth.signOut();
+      }
+    }
+
+    window.customElements.define(PupAlertProfile.is, PupAlertProfile);
+  </script>
+</dom-module>

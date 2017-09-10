@@ -1,0 +1,69 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../app-theme.html">
+
+<dom-module id="pup-alert-dashboard">
+  <template>
+    <style include="app-theme">
+      :host {
+        display: block
+      }
+
+      paper-card {
+        display: block;
+      }
+    </style>
+
+    <firebase-query
+      id="query"
+      path="/devices"
+      data="{{devices}}">
+    </firebase-query>
+
+    <div class="content">
+      <template is="dom-repeat" items="{{devices}}" as="device">
+        <paper-card heading="[[device.displayName]]" elevation="1" animated-shadow="false">
+          <div class="card-content">
+            <div class="line">
+              <div class="label">Temperature</div>
+              <div class="value">[[device.temperature]]</div>
+            </div>
+          </div>
+          <!-- <div class="card-actions">
+            <paper-button>Edit</paper-button>
+          </div> -->
+        </paper-card>
+      </template>
+    </div>
+
+
+  </template>
+
+  <script>
+    /**
+      * @customElement
+      * @polymer
+      * @extends {Polymer.Element}
+      */
+    class PupAlertDashboard extends Polymer.Element {
+      static get is() { return 'pup-alert-dashboard'; }
+
+      static get properties() {
+        return {
+          route: {
+            type: Object,
+            notify: true
+          }
+        };
+      }
+
+      _toString(device) {
+        return JSON.stringify(device, null, 2);
+      }
+    }
+
+    window.customElements.define(PupAlertDashboard.is, PupAlertDashboard);
+  </script>
+</dom-module>

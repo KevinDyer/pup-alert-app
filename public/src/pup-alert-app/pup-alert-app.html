@@ -1,9 +1,16 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/app-layout/app-layout.html">
+<link rel="import" href="../../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="../app-theme.html">
+<link rel="import" href="pup-alert-dashboard.html">
 <link rel="import" href="pup-alert-login.html">
+<link rel="import" href="pup-alert-profile.html">
+<link rel="import" href="pup-alert-splash.html">
 
 <dom-module id="pup-alert-app">
   <template>
@@ -13,7 +20,7 @@
       }
 
       app-toolbar {
-        background-color: var(--dark-primary-color);
+        background-color: var(--default-primary-color);
         color: var(--primary-text-color);
       }
 
@@ -22,6 +29,13 @@
       }
     </style>
 
+    <app-location route="{{route}}"></app-location>
+    <app-route
+        route="{{route}}"
+        pattern="/:page"
+        data="{{routeData}}">
+    </app-route>
+
     <firebase-app
       auth-domain="pup-alert-dev.firebaseapp.com"
       database-url="https://pup-alert-dev.firebaseio.com"
@@ -29,26 +43,20 @@
       storage-bucket="pup-alert-dev.appspot.com"
       messaging-sender-id="483016445952">
     </firebase-app>
-    <firebase-auth id="auth" user="{{user}}" signed-in="{{signedIn}}" status-known="{{statusKnown}}" on-error="handleError"></firebase-auth>
-    <firebase-messaging id="messaging" token="{{token}}"></firebase-messaging>
-    <firebase-document path="/users/[[user.uid]]/token" data="[[token]]"></firebase-document>
-    <firebase-document path="/temperature/Rn9yIaOY8taM04UeAd4IYcDZ75t2" data="{{temperature}}"></firebase-document>
+    <firebase-auth id="auth" signed-in="{{signedIn}}" status-known="{{statusKnown}}"></firebase-auth>
 
-    <app-header-layout>
-      <app-header>
+    <app-header-layout fullbleed>
+      <app-header slot="header" reveals shadow effects="waterfall">
         <app-toolbar>
-          <div main-title>Pup Alert Dev</div>
+          <div main-title>Pup Alert</div>
+          <pup-alert-profile></pup-alert-profile>
         </app-toolbar>
       </app-header>
-
-      <pup-alert-login id="login"></pup-alert-login>
-      <div id="app" class="content">
-        <div class="line">
-          <div class="label">Temperature</div>
-          <div class="value">[[_toFixed(temperature, 1)]]C</div>
-        </div>
-        <paper-button on-tap="signOut" raised>Sign Out</paper-button>
-      </div>
+      <iron-pages selected="[[page]]" attr-for-selected="data-route">
+        <pup-alert-splash data-route="splash"></pup-alert-splash>
+        <pup-alert-login data-route="login"></pup-alert-login>
+        <pup-alert-dashboard data-route="dashboard">dashboard</pup-alert-dashboard>
+      </iron-pages>
     </app-header-layout>
 
   </template>
@@ -60,51 +68,49 @@
      */
     class PupAlertApp extends Polymer.Element {
       static get is() { return 'pup-alert-app'; }
+
       static get properties() {
         return {
+          route: {
+            type: Object
+          },
+          routeData: {
+            type: Object
+          },
           signedIn: {
             type: Boolean
           },
           statusKnown: {
             type: Boolean
           },
-          user: {
-            type: Object
-          },
-          temperature: {
-            type: Number
+          page: {
+            type: Object,
+            computed: '_computePage(statusKnown, signedIn, routeData.page)',
+            observer: '_pageChanged'
           }
         };
       }
+
       static get observers() {
-        return [
-          '_userChanged(statusKnown, signedIn, user)'
-        ];
+        return [];
       }
 
-      _userChanged(statusKnown, signedIn, user) {
+      _computePage(statusKnown, signedIn, page) {
         if (!statusKnown) {
-          return;
+          return 'splash';
         }
+        if (!signedIn) {
+          return 'login';
+        }
+        return 'dashboard';
+      }
 
-        Polymer.dom(this.$.login).classList.toggle('hidden', signedIn);
-        Polymer.dom(this.$.app).classList.toggle('hidden', !signedIn);
-        if (signedIn) {
-          this.$.messaging.requestPermission().then(() => {
-            // permission was granted
-          }, (err) => {
-            // permission was denied
-            console.warn(err);
-          });
-        }
+      _pageChanged(page) {
+        this.set('routeData.page', page);
       }
 
       signOut() {
         this.$.auth.signOut();
-      }
-
-      _toFixed(value, digits) {
-        return Number(value).toFixed(digits);
       }
     }
 

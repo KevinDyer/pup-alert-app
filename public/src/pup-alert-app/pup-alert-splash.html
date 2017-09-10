@@ -1,0 +1,28 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../app-theme.html">
+
+<dom-module id="pup-alert-splash">
+  <template>
+    <style include="app-theme">
+      :host {
+        display: block;
+      }
+    </style>
+    
+    <paper-spinner active></paper-spinner>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class PupAlertSplash extends Polymer.Element {
+      static get is() { return 'pup-alert-splash'; }
+    }
+
+    window.customElements.define(PupAlertSplash.is, PupAlertSplash);
+  </script>
+</dom-module>
